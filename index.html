@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>옷입히기 게임</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        #gameContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #gameCanvas {
+            border: 1px solid #000;
+            background-color: #fff;
+            max-width: 100%;
+            height: auto;
+        }
+
+        #controls {
+            margin-top: 10px;
+        }
+
+        #imageSearch{
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: #ffff33;
+            border-radius: 5px;
+        }
+        
+        #fileInput,
+        #backgroundInput{
+            display: none;
+        }
+
+        #controls button,
+        .text{
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: blanchedalmond;
+            border-radius: 5px;
+    
+        }
+        .text2{
+            margin: 5px;
+            padding: 5px 10px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: tomato;
+            border-radius: 5px;
+        }
+        .stext{
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .info {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <div class="info">
+            <p id="imageInfo">크기:<br>회전 각도:<br>X:｜Y:
+        </div>
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <div id="controls">
+            <button id="nextPreset" onclick="nextPreset()">프리셋 변경 [1/8] 한교동과 침착맨</button>
+            <button id="nextBackground" onclick="nextBackground()">배경 변경 [1/26] 강동구 스튜디오</button>
+            <br>
+            <button id="changeMusic" onclick="changeMusic()">노래 바꾸기[1/4] 시놉시스</button>
+            <label id="mutelabel" for="mute" class="text">음소거 <input type="checkbox" id="mute"/></label>
+            <button onclick="deleteAllItems()">아이템 모두 삭제</button>
+            <label for="PNGCHANGER" class="text">아이템 입력시 크기 조정률 <input type="number" id="PNGCHANGER" value="0.4394" step='0.1' placeholder="권장 : 0.4394"></label>
+            
+            <audio id="audio" src="path/to/시놉시스.mp3" type="audio/mpeg"></audio>
+            <div>
+                <label for="fileInput" class="text2">이미지 업로드</label>
+                <input type="file" id="fileInput" accept="image/*">
+                <label for="backgroundInput" class="text2">배경 업로드</label>
+                <input type="file" id="backgroundInput" accept="image/*">
+                <input id="imageSearch" placeholder="아이템 쓰고 엔터" onkeydown="if(event.key==='Enter'){addImageFromText();}">
+                <button onclick="saveAsImage()">그림 즉시 다운로드</button>
+            </div>
+            <div>┌드래그한 상태로--┬──────┬───-─┬───────-──┬─────┬─────────-┐──────────-┐
+                <br>│ 크기 조절 WASD │ 회전 QE │ 삭제 T │ 이미지 고정 F │ 복제 V │ 회전각 변화 R │ 배경 변경 ← → │<br>
+                ├───────────┴──────┴─────┴─────────┴─────┴─────────-┴─────────-─┴─────────────────────────────────┐
+                <br>│프리셋 목록 : 한교동과 침착맨, 테무깡 침착맨, 백상 침착맨, 고프코어룩 침착맨, 국밥룩 침착맨, 전당포 기사, 떼무깡 침착맨, 마법소녀 어쩌고 침착맨　 　 │
+                <br>│배경 목록 : 강동구 스튜디오, 옾카페, 송파 스튜디오, 프랑스맨, 침공, 꿀잠맨, 배도라지1, 침최고민수, 샌즈맨, 우원박 초대석, 뉴진스 초대석, 임세모 초대석│
+                <br>│, 원펀데이, 침펄풍심, 스탠드업코미디, 유니콘1, 유니콘2, 소인배심사, 침곽튭빠, 침곽민빠, 어떤모습이, 침곽주, 침펄기, 침펄기눕, 시상식, 통천발냄새　 　│
+                <br>├────────────────────────────────────────────────────────────────────────────────────────────────┤
+                <br>│아이템 ▼
+                <br>│교동 : 교동모자, 교동헤어, 교동상의, 교동하의, 교동문어
+                <br>│테무 : 테무모자, 테무안경, 테무상의, 테무하의, 테무신발
+                <br>│백상 : 백상헤어, 백상상의, 백상하의
+                <br>│고프 : 고프모자, 고프상의, 고프하의, 고프신발
+                <br>│국밥 : 국밥헤어, 국밥아우터, 국밥상의, 국밥하의, 국밥신발
+                <br>│전당 : 전당모자, 전당아우터, 전당상의 ,전당하의, 전당메달, 침착맨기사
+                <br>│떼무 : 떼무헤어1, 떼무헤어2 떼무상의1, 떼무상의2, 떼무하의, 떼무로고
+                <br>│마법 : 마법헤어1, 마법헤어2, 마법헤어3, 마법상의, 마법하의
+                <br>│기타 : 로고, 침착맨, 얼뚱상, 55도발, 깨무룩, 단지운, 레몬맨1, 레몬맨2, 레몬맨3, 슬리퍼1, 슬리퍼2, 매직박, 매직박2
+                <br>│차돌짬뽕, 차돌볶음짬뽕, 지식은우정을, 철면, 철면수심1, 철면수심2, 침케이스, 펄케이스, 침투부, 침착맨기사
+                <br>└────────────────────────────────────────────────────────────────────
+            </div>
+        </div>
+    </div>
+    <script src="game.js"></script>
+</body>
+</html>
