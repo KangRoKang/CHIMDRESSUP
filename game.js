@@ -464,7 +464,7 @@ function loadBackground(BackgroundNum){
     if(BackgroundNum>initalMAXBACKGROUND){
         images.background.src = usersrc[BackgroundNum-initalMAXBACKGROUND-1];
     } else {
-        images.background.src = `resource/background${BackgroundNum}.png`
+        images.background.src = `resource/background${BackgroundNum}.jpeg`
     }
     images.background.onload = () => draw();
     canvas.width = backgroundinfo[BackgroundNum-1].width
