@@ -507,6 +507,7 @@ pngchangeBtn.addEventListener('change',function(){
 let loadcount = 1;
 loadAllPreset = setInterval(function() {
     nextPreset();
+    console.log(1);
     if(loadcount == presets.length-1){
         clearInterval(loadAllPreset);
         images.items = [];
