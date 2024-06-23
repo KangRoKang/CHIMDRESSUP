@@ -505,9 +505,9 @@ pngchangeBtn.addEventListener('change',function(){
 
 // 초기 프리셋, 배경 로드
 let loadcount = 1;
+console.log(1);
 loadAllPreset = setInterval(function() {
     nextPreset();
-    console.log(1);
     if(loadcount == presets.length-1){
         clearInterval(loadAllPreset);
         images.items = [];
