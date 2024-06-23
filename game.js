@@ -532,7 +532,7 @@ function loadAllBackground(){
             }
             
         }
-    }, 50);
+    }, 300);
 }
 
 function loadingbarDisplay(){
