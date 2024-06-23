@@ -502,27 +502,3 @@ const pngchangeBtn = document.getElementById('PNGCHANGER');
 pngchangeBtn.addEventListener('change',function(){
     PNGCHANGERATE = 1/pngchangeBtn.value;
 });
-
-// 초기 프리셋, 배경 로드
-let loadcount = 1;
-console.log(1);
-loadAllPreset = setInterval(function() {
-    nextPreset();
-    if(loadcount == presets.length-1){
-        clearInterval(loadAllPreset);
-        images.items = [];
-        loadAllBackground();
-    }
-    loadcount+=1;
-}, 250);
-
-function loadAllBackground(){
-    loadAllBackgrounds = setInterval(function() {
-        nextBackground();
-        if(currentBackground==backgroundinfo.length){
-            nextPreset();
-            document.getElementById('nextBackground').innerText=`배경 변경 [1/${MAXBACKGROUND}] ${backgroundinfo[0][0]}`;
-            clearInterval(loadAllBackgrounds)
-        }
-    }, 500);
-}
