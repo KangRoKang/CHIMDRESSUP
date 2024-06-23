@@ -4,8 +4,6 @@ const ctx = canvas.getContext('2d');
 let currentPreset = 1;
 let currentBackground = 0;
 let draggingItem = null;
-let offsetX, offsetY;
-let interactable = true; // 전역 변수로 상호작용 가능 여부 설정
 let PNGCHANGERATE = 2.27555;
 let angleChangeValue = 1;
 let usersrc = [];
@@ -14,148 +12,86 @@ const images = {
     background: new Image(),
     items: []
 };
-
 // 프리셋 데이터
 const presets = [
     {
         backgroundname:'한교동과 침착맨',
-        background: 'resource/preset1',
-        items: [
-            { src: 'resource/침착맨.png', x: 289, y: 176, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/교동하의.png', x: 587, y: 479, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/교동상의.png', x: 590, y: 329, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/교동헤어.png', x: 537, y: 141, width: 0, height: 480, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/교동모자.png', x: -18, y: 33, width: 0, height: 0, angle: -65, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/교동문어.png', x: 94, y: 416, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/로고.png', x: 362, y: 33, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0}
-        ]
+        background: 'preset1',
+        items:['침착맨','교동하의','교동상의','교동헤어','교동모자','교동문어','로고']
     },
     {
         backgroundname:'테무깡 침착맨',
-        background: 'resource/preset2',
-        items: [
-            { src: 'resource/침착맨.png', x: 289, y: 176, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/테무신발.png', x: 81, y: 486, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/테무하의.png', x: 552, y: 392, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/테무상의.png', x: 73, y: 287, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/테무모자.png', x: 552, y: 190, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/테무안경.png', x: 59, y: 39, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/로고.png', x: 422, y: 51, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0}
-        ]
+        background: 'preset2',
+        items: ['침착맨','테무신발','테무하의','테무상의','테무모자','테무안경']
     },
     {
         backgroundname:'백상예술대상 침착맨',
-        background: 'resource/preset3',
-        items: [
-            { src: 'resource/침착맨.png', x: 289, y: 176, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/백상하의.png', x: 83, y: 421, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/백상상의.png', x: 556, y: 289, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/백상헤어.png', x: 57, y: 75, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/로고.png', x: 494, y: 68, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0}
-        ]
+        background: 'preset3',
+        items: ['침착맨','백상하의','백상상의','백상헤어']
     },
     {
         backgroundname:'고프코어룩 침착맨',
-        background: 'resource/preset4',
-        items: [
-            { src: 'resource/침착맨.png', x: 289, y: 176, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/고프모자.png', x: 64, y: 95, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/고프신발.png', x: 565, y: 498, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/고프하의.png', x: 79, y: 370, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/고프상의.png', x: 550, y: 267, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/로고.png', x: 424, y: 51, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0}
-        ]
+        background: 'preset4',
+        items: ['침착맨','고프모자','고프신발','고프하의','고프상의']
     },
     {
         backgroundname:'국밥룩 침착맨',
-        background: 'resource/preset5',
-        items: [
-            { src: 'resource/침착맨.png', x: 289, y: 176, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/국밥상의.png', x: 68, y: 287, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/국밥하의.png', x: 567, y: 437, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/국밥신발.png', x: 87, y: 474, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/국밥아우터.png', x: 556, y: 229, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/국밥헤어.png', x: 53, y: 61, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/로고.png', x: 422, y: 52, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0}
-        ]
+        background: 'preset5',
+        items: ['침착맨','국밥상의','국밥하의','국밥신발','국밥아우터','국밥헤어']
     },
     {
         backgroundname:'전당포 기사 침착맨',
-        background: 'resource/preset6',
-        items: [
-            { src: 'resource/침착맨기사.png', x: 307, y: 176, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/전당상의.png', x: 552, y: 218, width: 0, height: 0, angle: -12, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/전당하의.png', x: 568, y: 420, width: 0, height: 0, angle: 10, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/전당아우터.png', x: 100, y: 354, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/전당메달.png', x: 335, y: 66, width: 0, height: 0, angle: 12, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/전당모자.png', x: 63, y: 89, width: 0, height: 0, angle: -17, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/로고.png', x: 497, y: 35, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0}
-        ]
+        background: 'preset6',
+        items: ['침착맨기사','전당상의','전당하의','전당아우터','전당메달','전당모자']
     },
     {
         backgroundname:'떼무깡 침착맨',
-        background: 'resource/preset7',
-        items: [
-            { src: 'resource/침착맨.png', x: 289, y: 176, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/떼무하의.png', x: 613, y: 466, width: 0, height: 0, angle: -5, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/떼무상의1.png', x: 597, y: 170, width: 0, height: 0, angle: 11, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/떼무상의2.png', x: 524, y: 330, width: 0, height: 0, angle: -11, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/떼무헤어1.png', x: 26, y: 34, width: 0, height: 0, angle: -24, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/떼무헤어2.png', x: 26, y: 331, width: 0, height: 0, angle: 47, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/떼무로고.png', x: 402, y: 44, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0}
-        ]
+        background: 'preset7',
+        items: ['침착맨','떼무하의','떼무상의1','떼무상의2','떼무헤어1','떼무헤어2','떼무로고']
     },
     {
-        backgroundname:'마법소녀 카와이 즈큥도큥 러블링 바큥부큥 침착맨',
-        background: 'resource/preset8',
-        items: [
-            { src: 'resource/침착맨.png', x: 289, y: 176, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/마법상의.png', x: 561, y: 343, width: 0, height: 0, angle: 9, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/마법하의.png', x: 554, y: 480, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/마법헤어1.png', x: 48, y: 53, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/마법헤어2.png', x: 1, y: 278, width: 0, height: 0, angle: 89, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/마법헤어3.png', x: 535, y: 191, width: 0, height: 0, angle: 5, isClickable: true ,iwidth: 0, iheight: 0},
-            { src: 'resource/로고.png', x: 420, y: 47, width: 0, height: 0, angle: 0, isClickable: true ,iwidth: 0, iheight: 0}
-        ]
+        backgroundname:'마법소녀카와이즈큥도큥러블링바큥부큥 침착맨',
+        background: 'preset8',
+        items: ['침착맨','마법상의','마법하의','마법헤어1','마법헤어2','마법헤어3','로고2']
     }
 ];
 
 let backgroundinfo = [
-    {backgroundname:'배경1',width: 800, height: 600},
-    {backgroundname:'배경2',width: 800, height: 600},
-    {backgroundname:'배경3',width: 800, height: 600},
-    {backgroundname:'배경4',width: 800, height: 600},
-    {backgroundname:'배경5',width: 800, height: 600},
-    {backgroundname:'배경6',width: 800, height: 600},
-    {backgroundname:'노트북뒷면',width: 930, height: 600},
-    {backgroundname:'배도라지1',width: 925, height: 600},
-    {backgroundname:'강동구 스튜디오',width: 600, height: 600},
-    {backgroundname:'옾카페',width: 800, height: 600} ,
-    {backgroundname:'송파 스튜디오',width: 1070, height: 600} ,
-    {backgroundname:'프랑스맨',width: 1081, height: 600} ,
-    {backgroundname:'침공 어찌하여',width: 1065, height: 600} ,
-    {backgroundname:'꿀잠맨',width: 799, height: 600} ,
-    {backgroundname:'배도라지2',width: 857, height: 600} ,
-    {backgroundname:'침최고민수',width: 800, height: 600} ,
-    {backgroundname:'샌즈맨',width: 1075, height: 600} ,
-    {backgroundname:'우원박 초대석',width: 861, height: 600} ,
-    {backgroundname:'뉴진스 초대석',width: 1067, height: 600} ,
-    {backgroundname:'임세모 초대석',width: 781, height: 600},
-    {backgroundname:'원펀데이',width: 862, height: 600},
-    {backgroundname:'침펄풍심',width: 1030, height: 600},
-    {backgroundname:'스탠드업코미디',width: 856, height: 600},
-    {backgroundname:'유니콘1',width: 1068, height: 600},
-    {backgroundname:'유니콘2',width: 938, height: 600},
-    {backgroundname:'소인배심사',width: 1067, height: 600},
-    {backgroundname:'침곽빠',width: 1066, height: 600},
-    {backgroundname:'침곽빠2',width: 1073, height: 600},
-    {backgroundname:'어떤모습이',width: 1066, height: 600},
-    {backgroundname:'침곽주',width: 1062, height: 600},
-    {backgroundname:'침펄기',width: 600, height: 600},
-    {backgroundname:'침펄기눕',width: 600, height: 600},
-    {backgroundname:'시상식',width: 1073, height: 600},
-    {backgroundname:'통천발냄새',width: 889, height: 600}
-    ]
+    ['배경1', 800, 600],
+    ['배경2', 800, 600],
+    ['배경3', 800, 600],
+    ['배경4', 800, 600],
+    ['배경5', 800, 600],
+    ['배경6', 800, 600],
+    ['노트북뒷면', 930, 600],
+    ['배도라지1', 925, 600],
+    ['강동구 스튜디오', 600, 600],
+    ['옾카페', 800, 600],
+    ['송파 스튜디오', 1070, 600],
+    ['프랑스맨', 1081, 600],
+    ['침공 어찌하여', 1065, 600],
+    ['꿀잠맨', 799, 600],
+    ['배도라지2', 857, 600],
+    ['침최고민수', 800, 600],
+    ['샌즈맨', 1075, 600],
+    ['우원박 초대석', 861, 600],
+    ['뉴진스 초대석', 1067, 600],
+    ['임세모 초대석', 781, 600],
+    ['원펀데이', 862, 600],
+    ['침펄풍심', 1030, 600],
+    ['스탠드업코미디', 856, 600],
+    ['유니콘1', 1068, 600],
+    ['유니콘2', 938, 600],
+    ['소인배심사', 1067, 600],
+    ['침곽빠', 1066, 600],
+    ['침곽빠2', 1073, 600],
+    ['어떤모습이', 1066, 600],
+    ['침곽주', 1062, 600],
+    ['침펄기', 600, 600],
+    ['침펄기눕', 600, 600],
+    ['시상식', 1073, 600],
+    ['통천발냄새', 889, 600]
+]
 
 const MAXPRESET = presets.length;
 let MAXBACKGROUND = backgroundinfo.length;
@@ -163,94 +99,85 @@ const initalMAXBACKGROUND = MAXBACKGROUND;
 
 // 기본 제공 이미지 리스트
 const imageList = {
-    "교동하의":{ src: 'resource/교동하의.png', x: 587, y: 479, width: 152, height: 72, angle: 0, iwidth: 0, iheight: 0},
-    "교동상의":{ src: 'resource/교동상의.png', x: 590, y: 329, width: 161, height: 109, angle: 0, iwidth: 0, iheight: 0},
-    "교동헤어":{ src: 'resource/교동헤어.png', x: 537, y: 141, width: 220, height: 149, angle: 0, iwidth: 0, iheight: 0},
-    "교동모자":{ src: 'resource/교동모자.png', x: -18, y: 33, width: 334, height: 285, angle: -65, iwidth: 0, iheight: 0},
-    "교동문어":{ src: 'resource/교동문어.png', x: 94, y: 416, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "로고":{ src: 'resource/로고.png', x: 362, y: 33, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "테무신발":{ src: 'resource/테무신발.png', x: 81, y: 486, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "테무하의":{ src: 'resource/테무하의.png', x: 552, y: 392, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "테무상의":{ src: 'resource/테무상의.png', x: 73, y: 287, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "테무모자":{ src: 'resource/테무모자.png', x: 552, y: 190, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "테무안경":{ src: 'resource/테무안경.png', x: 59, y: 39, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "백상하의":{ src: 'resource/백상하의.png', x: 83, y: 421, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "백상상의":{ src: 'resource/백상상의.png', x: 556, y: 289, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "백상헤어":{ src: 'resource/백상헤어.png', x: 57, y: 75, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "고프모자":{ src: 'resource/고프모자.png', x: 64, y: 95, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "고프신발":{ src: 'resource/고프신발.png', x: 565, y: 498, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "고프하의":{ src: 'resource/고프하의.png', x: 79, y: 370, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "고프상의":{ src: 'resource/고프상의.png', x: 550, y: 267, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "국밥상의":{ src: 'resource/국밥상의.png', x: 68, y: 287, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "국밥하의":{ src: 'resource/국밥하의.png', x: 567, y: 437, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "국밥신발":{ src: 'resource/국밥신발.png', x: 87, y: 474, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "국밥아우터":{ src: 'resource/국밥아우터.png', x: 556, y: 229, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "국밥헤어":{ src: 'resource/국밥헤어.png', x: 53, y: 61, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "전당상의":{ src: 'resource/전당상의.png', x: 552, y: 218, width: 0, height: 0, angle: -12, iwidth: 0, iheight: 0},
-    "전당하의":{ src: 'resource/전당하의.png', x: 568, y: 420, width: 0, height: 0, angle: 10, iwidth: 0, iheight: 0},
-    "전당아우터":{ src: 'resource/전당아우터.png', x: 100, y: 354, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "전당메달":{ src: 'resource/전당메달.png', x: 335, y: 66, width: 0, height: 0, angle: 12, iwidth: 0, iheight: 0},
-    "전당모자":{ src: 'resource/전당모자.png', x: 63, y: 89, width: 0, height: 0, angle: -17, iwidth: 0, iheight: 0},
-    "떼무하의":{ src: 'resource/떼무하의.png', x: 613, y: 466, width: 0, height: 0, angle: -5, iwidth: 0, iheight: 0},
-    "떼무상의1":{ src: 'resource/떼무상의1.png', x: 597, y: 170, width: 0, height: 0, angle: 11, iwidth: 0, iheight: 0},
-    "떼무상의2":{ src: 'resource/떼무상의2.png', x: 524, y: 330, width: 0, height: 0, angle: -11, iwidth: 0, iheight: 0},
-    "떼무헤어1":{ src: 'resource/떼무헤어1.png', x: 26, y: 34, width: 0, height: 0, angle: -24, iwidth: 0, iheight: 0},
-    "떼무헤어2":{ src: 'resource/떼무헤어2.png', x: 26, y: 331, width: 0, height: 0, angle: 47, iwidth: 0, iheight: 0},
-    "떼무로고":{ src: 'resource/떼무로고.png', x: 402, y: 44, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "마법상의":{ src: 'resource/마법상의.png', x: 561, y: 343, width: 0, height: 0, angle: 9, iwidth: 0, iheight: 0},
-    "마법하의":{ src: 'resource/마법하의.png', x: 554, y: 480, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "마법헤어1":{ src: 'resource/마법헤어1.png', x: 48, y: 53, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "마법헤어2":{ src: 'resource/마법헤어2.png', x: 1, y: 278, width: 0, height: 0, angle: 89, iwidth: 0, iheight: 0},
-    "마법헤어3":{ src: 'resource/마법헤어3.png', x: 535, y: 191, width: 0, height: 0, angle: 5, iwidth: 0, iheight: 0},
-    "얼뚱상":{ src: 'resource/얼뚱상.png', x: 250, y: 0, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "침착맨":{ src: 'resource/침착맨.png', x: 250, y: 0, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "55도발":{ src: 'resource/55도발.png', x: 250, y: 0, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "깨무룩":{ src: 'resource/깨무룩.png', x: 250, y: 0, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "단지운":{ src: 'resource/단지운.png', x: 250, y: 0, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "레몬맨1":{ src: 'resource/레몬맨1.png', x: 250, y: 0, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "레몬맨2":{ src: 'resource/레몬맨2.png', x: 250, y: 0, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "레몬맨3":{ src: 'resource/레몬맨3.png', x: 250, y: 0, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "슬리퍼1":{ src: 'resource/슬리퍼1.png', x: 250, y: 0, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "슬리퍼2":{ src: 'resource/슬리퍼2.png', x: 250, y: 0, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "매직박1":{ src: 'resource/매직박1.png', x: 250, y: 0, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "매직박2":{ src: 'resource/매직박2.png', x: 250, y: 0, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "차돌짬뽕":{ src: 'resource/차돌짬뽕.png', x: 250, y: 0, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "차돌볶음짬뽕":{ src: 'resource/차돌볶음짬뽕.png', x: 250, y: 0, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "지식은우정을":{ src: 'resource/지식은우정을.png', x: 250, y: 0, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "철면":{ src: 'resource/철면.png', x: 250, y: 0, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "철면수심1":{ src: 'resource/철면수심1.png', x: 250, y: 0, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "철면수심2":{ src: 'resource/철면수심2.png', x: 250, y: 0, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "침케이스":{ src: 'resource/침케이스.png', x: 250, y: 0, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "펄케이스":{ src: 'resource/펄케이스.png', x: 250, y: 0, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "침투부":{ src: 'resource/침투부.png', x: 250, y: 0, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "침착맨":{ src: 'resource/침착맨.png', x: 289, y: 176, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
-    "침착맨기사":{ src: 'resource/침착맨기사.png', x: 307, y: 176, width: 0, height: 0, angle: 0, iwidth: 0, iheight: 0},
+    "교동하의":{x: 587, y: 479, width: 152, height: 72, angle: 0},
+    "교동상의":{x: 590, y: 329, width: 161, height: 109, angle: 0},
+    "교동헤어":{x: 537, y: 141, width: 220, height: 149, angle: 0},
+    "교동모자":{x: -18, y: 33, width: 334, height: 285, angle: -65},
+    "교동문어":{x: 94, y: 416, width: 0, height: 0, angle: 0},
+    "로고":{x: 362, y: 33, width: 0, height: 0, angle: 0},
+    "로고2":{x: 420, y: 48, width: 0, height: 0, angle: 0},
+    "테무신발":{x: 81, y: 486, width: 0, height: 0, angle: 0},
+    "테무하의":{x: 552, y: 392, width: 0, height: 0, angle: 0},
+    "테무상의":{x: 73, y: 287, width: 0, height: 0, angle: 0},
+    "테무모자":{x: 552, y: 190, width: 0, height: 0, angle: 0},
+    "테무안경":{x: 59, y: 39, width: 0, height: 0, angle: 0},
+    "백상하의":{x: 83, y: 421, width: 0, height: 0, angle: 0},
+    "백상상의":{x: 556, y: 289, width: 0, height: 0, angle: 0},
+    "백상헤어":{x: 57, y: 75, width: 0, height: 0, angle: 0},
+    "고프모자":{x: 64, y: 95, width: 0, height: 0, angle: 0},
+    "고프신발":{x: 565, y: 498, width: 0, height: 0, angle: 0},
+    "고프하의":{x: 79, y: 370, width: 0, height: 0, angle: 0},
+    "고프상의":{x: 550, y: 267, width: 0, height: 0, angle: 0},
+    "국밥상의":{x: 68, y: 287, width: 0, height: 0, angle: 0},
+    "국밥하의":{x: 567, y: 437, width: 0, height: 0, angle: 0},
+    "국밥신발":{x: 87, y: 474, width: 0, height: 0, angle: 0},
+    "국밥아우터":{x: 556, y: 229, width: 0, height: 0, angle: 0},
+    "국밥헤어":{x: 53, y: 61, width: 0, height: 0, angle: 0},
+    "전당상의":{x: 552, y: 218, width: 0, height: 0, angle: -12},
+    "전당하의":{x: 568, y: 420, width: 0, height: 0, angle: 10},
+    "전당아우터":{x: 100, y: 354, width: 0, height: 0, angle: 0},
+    "전당메달":{x: 335, y: 66, width: 0, height: 0, angle: 12},
+    "전당모자":{x: 63, y: 89, width: 0, height: 0, angle: -17},
+    "떼무하의":{x: 613, y: 466, width: 0, height: 0, angle: -5},
+    "떼무상의1":{x: 597, y: 170, width: 0, height: 0, angle: 11},
+    "떼무상의2":{x: 524, y: 330, width: 0, height: 0, angle: -11},
+    "떼무헤어1":{x: 26, y: 34, width: 0, height: 0, angle: -24},
+    "떼무헤어2":{x: 26, y: 331, width: 0, height: 0, angle: 47},
+    "떼무로고":{x: 402, y: 44, width: 0, height: 0, angle: 0},
+    "마법상의":{x: 561, y: 343, width: 0, height: 0, angle: 9},
+    "마법하의":{x: 554, y: 480, width: 0, height: 0, angle: 0},
+    "마법헤어1":{x: 48, y: 53, width: 0, height: 0, angle: 0},
+    "마법헤어2":{x: 1, y: 278, width: 0, height: 0, angle: 89},
+    "마법헤어3":{x: 535, y: 191, width: 0, height: 0, angle: 5},
+    "얼뚱상":{x: 250, y: 0, width: 0, height: 0, angle: 0},
+    "침착맨":{x: 250, y: 0, width: 0, height: 0, angle: 0},
+    "55도발":{x: 250, y: 0, width: 0, height: 0, angle: 0},
+    "깨무룩":{x: 250, y: 0, width: 0, height: 0, angle: 0},
+    "단지운":{x: 250, y: 0, width: 0, height: 0, angle: 0},
+    "레몬맨1":{x: 250, y: 0, width: 0, height: 0, angle: 0},
+    "레몬맨2":{x: 250, y: 0, width: 0, height: 0, angle: 0},
+    "레몬맨3":{x: 250, y: 0, width: 0, height: 0, angle: 0},
+    "슬리퍼1":{x: 250, y: 0, width: 0, height: 0, angle: 0},
+    "슬리퍼2":{x: 250, y: 0, width: 0, height: 0, angle: 0},
+    "매직박1":{x: 250, y: 0, width: 0, height: 0, angle: 0},
+    "매직박2":{x: 250, y: 0, width: 0, height: 0, angle: 0},
+    "차돌짬뽕":{x: 250, y: 0, width: 0, height: 0, angle: 0},
+    "차돌볶음짬뽕":{x: 250, y: 0, width: 0, height: 0, angle: 0},
+    "지식은우정을":{x: 250, y: 0, width: 0, height: 0, angle: 0},
+    "철면":{x: 250, y: 0, width: 0, height: 0, angle: 0},
+    "철면수심1":{x: 250, y: 0, width: 0, height: 0, angle: 0},
+    "철면수심2":{x: 250, y: 0, width: 0, height: 0, angle: 0},
+    "침케이스":{x: 250, y: 0, width: 0, height: 0, angle: 0},
+    "펄케이스":{x: 250, y: 0, width: 0, height: 0, angle: 0},
+    "침투부":{x: 250, y: 0, width: 0, height: 0, angle: 0},
+    "침착맨":{x: 289, y: 176, width: 0, height: 0, angle: 0},
+    "침착맨기사":{x: 307, y: 176, width: 0, height: 0, angle: 0},
     }
 
 // 초기 프리셋 로드
 function loadPreset(presetIndex) {
     const preset = presets[presetIndex - 1];
-    images.background.src = `${preset.background}.jpg`;
+    images.background.src = `resource/${preset.background}.jpg`;
     images.background.onload = () => draw();
-    canvas.width = 800;
-    canvas.height = 600;
-    images.items = preset.items.map(item => {
-        const img = new Image();
-        img.src = item.src;
-        return { img, x: item.x, y: item.y, width: item.width, height: item.height, angle: item.angle, isClickable:true, iwidth: item.iwidth, iheight: item.iheight};
+    preset.items.forEach(item =>{
+        addImageFromText(item);
     });
-    images.items.forEach(item => {
-        item.img.onload = () => {
-            item.width = item.img.width/PNGCHANGERATE;
-            item.height = item.img.height/PNGCHANGERATE;
-            item.iwidth = item.img.width/PNGCHANGERATE;
-            item.iheight = item.img.height/PNGCHANGERATE;
-            draw();
-        };
-    });
+    canvas.width=800;
+    canvas.height=600;
 }
 
 function changePreset(presetIndex) {
+    images.items = [];
     currentPreset = presetIndex;
     loadPreset(currentPreset);
 }
@@ -270,8 +197,6 @@ function draw() {
 
 // 드래그 이벤트 핸들러
 canvas.addEventListener('mousedown', function(e) {
-    if (!interactable) return; // 상호작용 불가능 상태에서는 이벤트 처리하지 않음
-
     const mouseX = e.offsetX;
     const mouseY = e.offsetY;
 
@@ -287,7 +212,7 @@ canvas.addEventListener('mousedown', function(e) {
 });
 
 canvas.addEventListener('mousemove', function(e) {
-    if (!interactable || !draggingItem) return; // 상호작용 불가능 상태거나 드래그 대상이 없으면 이벤트 처리하지 않음
+    if (!draggingItem) return;
 
     const mouseX = e.offsetX;
     const mouseY = e.offsetY;
@@ -317,7 +242,7 @@ document.addEventListener('keydown', function(e) {
         prevBackground(); // 왼쪽키로 배경 바꾸기
     }
     
-    if (!interactable || !draggingItem) return; // 상호작용 불가능 상태거나 드래그 대상이 없으면 이벤트 처리하지 않음
+    if (!draggingItem) return; //드래그 대상이 없으면 이벤트 처리하지 않음
 
     if (e.key === 'q' || e.key === 'Q') {
         draggingItem.angle -= angleChangeValue; // Q키로 왼쪽 회전
@@ -352,8 +277,7 @@ document.addEventListener('keydown', function(e) {
 });
 
 // 이미지 추가 함수 (텍스트 입력창에서)
-function addImageFromText() {
-    const searchTerm = document.getElementById('imageSearch').value.toLowerCase();
+function addImageFromText(searchTerm) {
     const imageInfo = imageList[searchTerm];
     if (imageInfo) {
         const img = new Image();
@@ -371,7 +295,7 @@ function addImageFromText() {
             });
             draw();
         };
-        img.src = `${imageInfo.src}`;
+        img.src = `resource/${searchTerm}.png`;
     } else {
         alert('그런건 없잖슴~');
     }
@@ -408,9 +332,9 @@ function addBackgroundFromFile(file) {
         img.onload = function() {
             MAXBACKGROUND+=1;
             currentBackground = MAXBACKGROUND;
-            backgroundinfo.push({backgroundname: `사용자 배경 ${MAXBACKGROUND-initalMAXBACKGROUND}`, width: img.naturalWidth, height: img.naturalHeight})
+            backgroundinfo.push([`사용자 배경 ${MAXBACKGROUND-initalMAXBACKGROUND}`,img.naturalWidth, img.naturalHeight])
             usersrc[MAXBACKGROUND-initalMAXBACKGROUND-1] = event.target.result;
-            document.getElementById('nextBackground').innerText=`배경 변경 [${currentBackground}/${MAXBACKGROUND}] ${backgroundinfo[MAXBACKGROUND-1].backgroundname}`;
+            nextBackgroundTextSet();
             loadBackground(MAXBACKGROUND);
         };
         img.src =event.target.result;
@@ -438,26 +362,28 @@ function nextPreset(){
 }
 
 //배경 변경
+function nextBackgroundTextSet(){
+    document.getElementById('nextBackground').innerText=`배경 변경 [${currentBackground}/${MAXBACKGROUND}] ${backgroundinfo[currentBackground-1][0]}`;
+}
+
 function nextBackground(){
-    const nextBackgroundBtn = document.getElementById('nextBackground');
     if(currentBackground==MAXBACKGROUND){
         currentBackground=1;
     } else{
         currentBackground+=1
     }
     loadBackground(currentBackground);
-    nextBackgroundBtn.innerText=`배경 변경 [${currentBackground}/${MAXBACKGROUND}] ${backgroundinfo[currentBackground-1].backgroundname}`;
+    nextBackgroundTextSet();
 }
 
 function prevBackground(){
-    const nextBackgroundBtn = document.getElementById('nextBackground');
     if(currentBackground<=1){
         currentBackground=MAXBACKGROUND;
     } else{
         currentBackground-=1
     }
     loadBackground(currentBackground);
-    nextBackgroundBtn.innerText=`배경 변경 [${currentBackground}/${MAXBACKGROUND}] ${backgroundinfo[currentBackground-1].backgroundname}`;
+    nextBackgroundTextSet();
 }
 
 function loadBackground(BackgroundNum){
@@ -467,10 +393,11 @@ function loadBackground(BackgroundNum){
         images.background.src = `resource/background${BackgroundNum}.jpeg`
     }
     images.background.onload = () => draw();
-    canvas.width = backgroundinfo[BackgroundNum-1].width
-    canvas.height = backgroundinfo[BackgroundNum-1].height
+    canvas.width = backgroundinfo[BackgroundNum-1][1];
+    canvas.height = backgroundinfo[BackgroundNum-1][2];
 }
 
+//모든 아이템 지우기
 function deleteAllItems(){
     images.items = [];
     draw();
@@ -492,7 +419,7 @@ function cloneImageObject(original) {
         angle: original.angle,
         isClickable: true,
         iwidth: original.iwidth,
-        iheight: original.iheight// 새로 복제된 이미지는 클릭 가능하도록 설정
+        iheight: original.iheight
     };
     images.items.push(newImage);
 }
@@ -508,10 +435,6 @@ function displayImageInfo() {
         infoElement.innerHTML += `Y: ${draggingItem.y}<br>`;
     }
 }
-
-// 초기 프리셋 로드
-loadPreset(currentPreset);
-
 
 // Canvas 이미지를 다운로드하는 함수
 function saveAsImage() {
@@ -533,21 +456,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const playPauseButton = document.getElementById('playPauseButton');
     const nextSongButton = document.getElementById('nextSongButton');
     const muteCheckbox = document.getElementById('muteCheckbox');
-
     const songs = ['시놉시스','필더펑크','스떼윗미','킬링벌스']
     let currentSongIndex = 0;
+    audio.volume = 0.5;
 
     // Load the first song
     audio.src = `resource/${songs[currentSongIndex]}.mp3`;
-
+    
     // Play or pause the audio
     playPauseButton.addEventListener('click', function() {
         if (audio.paused) {
-            audio.play().then(() => {
-                playPauseButton.innerText = "음악 정지";
-            }).catch((error) => {
-                console.error("Audio play failed: ", error);
-            });
+            audio.play()
+            playPauseButton.innerText = "음악 정지";
         } else {
             audio.pause();
             playPauseButton.innerText = "음악 재생";
@@ -556,15 +476,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Change to the next song
     nextSongButton.addEventListener('click', function() {
-        currentSongIndex = (currentSongIndex + 1) % songs.length;
+        currentSongIndex +=1;
         audio.src = `resource/${songs[currentSongIndex]}.mp3`;
-        
-        audio.play().then(() => {
-            playPauseButton.innerText = "음악 정지";
-            nextSongButton.innerText = `다음 음악[${currentSongIndex+1}/${songs.length}]`
-        }).catch((error) => {
-            console.error("Audio play failed: ", error);
-        });
+        audio.play()
+        playPauseButton.innerText = "음악 정지";
+        nextSongButton.innerText = `다음 음악[${currentSongIndex+1}/${songs.length}]`
     });
 
     // Mute or unmute the audio
@@ -575,12 +491,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Loop the audio when it ends
     audio.addEventListener('ended', function() {
         this.currentTime = 0;
-        this.play().catch((error) => {
-            console.error("Audio replay failed: ", error);
-        });
+        this.play()
     });
 });
-audio.volume = 0.5;
+
 
 
 //PNG크기 조정
@@ -588,3 +502,26 @@ const pngchangeBtn = document.getElementById('PNGCHANGER');
 pngchangeBtn.addEventListener('change',function(){
     PNGCHANGERATE = 1/pngchangeBtn.value;
 });
+
+// 초기 프리셋, 배경 로드
+let loadcount = 1;
+loadAllPreset = setInterval(function() {
+    nextPreset();
+    if(loadcount == presets.length-1){
+        clearInterval(loadAllPreset);
+        images.items = [];
+        loadAllBackground();
+    }
+    loadcount+=1;
+}, 250);
+
+function loadAllBackground(){
+    loadAllBackgrounds = setInterval(function() {
+        nextBackground();
+        if(currentBackground==backgroundinfo.length){
+            nextPreset();
+            document.getElementById('nextBackground').innerText=`배경 변경 [1/${MAXBACKGROUND}] ${backgroundinfo[0][0]}`;
+            clearInterval(loadAllBackgrounds)
+        }
+    }, 500);
+}
