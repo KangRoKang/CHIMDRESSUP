@@ -513,18 +513,28 @@ loadAllPreset = setInterval(function() {
         loadAllBackground();
     }
     loadcount+=1;
-}, 250);
+    loadingbarDisplay()
+}, 100);
 
 function loadAllBackground(){
     loadAllBackgrounds = setInterval(function() {
         nextBackground();
         images.background.onload = () => {
+            loadcount+=1;
+            loadingbarDisplay()
             if(currentBackground==backgroundinfo.length){
+                images.background = new Image();
                 nextPreset();
                 document.getElementById('nextBackground').innerText=`배경 변경 [1/${MAXBACKGROUND}] ${backgroundinfo[0][0]}`;
                 clearInterval(loadAllBackgrounds)
+                canvas.style.display='block';
+                document.getElementById('loadbox').style.display='none';
             }
             
         }
     }, 50);
+}
+
+function loadingbarDisplay(){
+    document.getElementById('innerloadbar').style.width=`${400*(loadcount/(MAXBACKGROUND+MAXPRESET))}px`;
 }
