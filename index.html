@@ -130,5 +130,28 @@
         </div>
     </div>
     <script src="game.js"></script>
+    <script>
+        let loadcount = 1;
+loadAllPreset = setInterval(function() {
+    nextPreset();
+    if(loadcount == presets.length-1){
+        clearInterval(loadAllPreset);
+        images.items = [];
+        loadAllBackground();
+    }
+    loadcount+=1;
+}, 250);
+
+function loadAllBackground(){
+    loadAllBackgrounds = setInterval(function() {
+        nextBackground();
+        if(currentBackground==backgroundinfo.length){
+            nextPreset();
+            document.getElementById('nextBackground').innerText=`배경 변경 [1/${MAXBACKGROUND}] ${backgroundinfo[0][0]}`;
+            clearInterval(loadAllBackgrounds)
+        }
+    }, 500);
+}
+    </script>
 </body>
 </html>
