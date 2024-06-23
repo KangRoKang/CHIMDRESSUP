@@ -5,10 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>옷입히기 게임</title>
     <style>
-        .hidden{
-            display: none !important;
-        }
-        
         body {
             margin: 0;
             font-family: Arial, sans-serif;
@@ -73,7 +69,27 @@
         .info {
             font-size: 14px;
         }
-
+        
+        #loadbox{
+            width: 800px;
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #outerloadbar{
+            width: 400px;
+            height: 20px;
+            background-color:lightgray;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+        }
+        #innerloadbar{
+            height: 20px;
+            background-color: cornflowerblue;
+            border-radius: 30px;
+        }
     </style>
 </head>
 <body>
@@ -81,7 +97,12 @@
         <div class="info">
             <p id="imageInfo">크기:<br>회전 각도:<br>X:｜Y:
         </div>
-        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <div id="loadbox">
+            <div id="outerloadbar">
+                <div id="innerloadbar"></div>
+            </div>
+        </div>
+        <canvas id="gameCanvas" style="display: none;" width="800" height="600" class = 'hidden'></canvas>
         <div id="controls">
             <button id="nextPreset" onclick="nextPreset()">프리셋 변경 [1/8] 한교동과 침착맨</button>
             <button id="nextBackground" onclick="nextBackground()">배경 변경 [1/26] 강동구 스튜디오</button>
@@ -103,7 +124,6 @@
                 <input id="imageSearch" placeholder="아이템 쓰고 엔터" onkeydown="if(event.key==='Enter'){addImageFromText(value);}">
                 <button onclick="saveAsImage()">그림 즉시 다운로드</button>
                 <img src="resource/unnamed1.jpg" style="padding-top: 5px ;" width="40px" height="40px" alt="강로캉">
-                <span id="test">abc</span>
             </div>
         </div>
     
